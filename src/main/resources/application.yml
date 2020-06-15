@@ -1,0 +1,51 @@
+server:
+  port: 8099
+
+spring:
+  profiles:
+    active: local
+  application:
+    name: kafka4
+---
+
+spring:
+  profiles: local
+  kafka:
+    template:
+      default-topic: file-events
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        acks: all
+        retries: 10
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/sixthsense?serverTimezone=Asia/Seoul
+    username: root
+    password: root
+    jpa:
+      hibernate:
+        ddl-auto: update
+
+    devtools:
+      restart:
+        enable: true
+
+logging:
+  level:
+    package com.example.kafka4.client: DEBUG
+
+---
+spring:
+  profiles: publish
+  kafka:
+    template:
+      default-topic: file-events
+    producer:
+      bootstrap-servers: 59.29.224.73:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        acks: all
+        retries: 10
