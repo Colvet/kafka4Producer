@@ -12,8 +12,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "result_log")
@@ -25,7 +23,7 @@ public class ResultLogEntity implements Serializable {
     @Column(nullable = true, name = "user_name")
     private String userName;
 
-    @Column(name = "create_date")
+    @Column(name = "created_date")
     private Date createdDate;
 
     @Column(name = "download_cnt")

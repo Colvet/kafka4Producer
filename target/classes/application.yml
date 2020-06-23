@@ -2,19 +2,16 @@ server:
   port: 8099
 
 spring:
-  profiles:
-    active: local
+#  profiles:
+#    active: local
   application:
     name: kafka4
----
 
-spring:
-  profiles: local
   kafka:
     template:
       default-topic: file-events
     producer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: 59.29.224.136:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
@@ -37,15 +34,40 @@ logging:
     package com.example.kafka4.client: DEBUG
 
 ---
+server:
+  port: 8099
 spring:
   profiles: publish
+
   kafka:
     template:
       default-topic: file-events
     producer:
-      bootstrap-servers: 59.29.224.73:9092
+      bootstrap-servers: 59.29.224.136:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
         acks: all
         retries: 10
+
+  application:
+    name: kafka-producer-service
+
+  datasource:
+    url: jdbc:mysql://mysql:3306/k8sdb?serverTimezone=Asia/Seoul&allowMultiQueries=true
+    username: k8suser
+    password: k8suser
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  devtools:
+    restart:
+      enabled: true
+
+
+  main:
+    allow-bean-definition-overriding: true
+
+  cloud:
+    kubernetes:
+      discovery:
+        all-namespaces: true

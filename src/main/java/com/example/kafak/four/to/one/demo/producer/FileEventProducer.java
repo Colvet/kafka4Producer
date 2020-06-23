@@ -57,9 +57,17 @@ public class FileEventProducer {
             String dir = fileEvent.getResultLocation();
             fileEvent.setResultLocation(null);
             InputStreamReader is = new InputStreamReader(new FileInputStream(dir), "UTF-8");
+//            is.write(0xEF);
             CSVReader csvReader = new CSVReader(is);
 
             List<String[]> csvList = csvReader.readAll();
+
+            FileEvent startEvent = new FileEvent();
+            startEvent.setFileEventType(FileEventType.CREATE);
+            startEvent.setResultFileName(fileEvent.getResultFileName());
+            String startvalue = objectMapper.writeValueAsString(startEvent);
+            log.info("startvalue:{}",startvalue);
+            kafkaTemplate.send(topic, key, startvalue);
 
             for (String[] str : csvList){
 
@@ -99,6 +107,7 @@ public class FileEventProducer {
 
 
     private void handleFailure(String key, String value, Throwable ex) {
+
         log.error("Error Sending the Message and the exception is {}", ex.getMessage());
         try {
             throw ex;
